@@ -57,7 +57,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'pickup.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://mypickup.in/",
+    "https://mypickup.in",
 ]
 
 
