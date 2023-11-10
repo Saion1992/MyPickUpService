@@ -90,9 +90,6 @@ DATABASES = {
     }
 }
 
-//psql 'postgresql://cyan241992:t1OyZJ7AlUCc@ep-odd-sun-22519589.us-east-2.aws.neon.tech/SlotBookingDatabase?sslmode=require'
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
