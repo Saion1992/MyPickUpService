@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from .models import OfficeBooking, SelectedDay, SchoolBooking
 from .serializers import OfficeBookingSerializer, SchoolBookingSerializer
 
-@api_view(['POST'])
+
 def office_booking_list_create(request):
     data = request.data
     mobile = data.get('mobile')
@@ -79,7 +79,7 @@ def office_booking_list_create(request):
 
     return Response({'message': 'Method Not Allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-@api_view(['POST'])
+
 def school_booking_list_create(request):
     data = request.data
     mobile = data.get('mobile')
