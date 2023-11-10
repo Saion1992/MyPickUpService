@@ -77,6 +77,7 @@ def office_booking_list_create(request):
 
     return Response({'message': 'Method Not Allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@api_view(['POST'])
 def school_booking_list_create(request):
     data = request.data
     mobile = data.get('mobile')
@@ -85,6 +86,7 @@ def school_booking_list_create(request):
     if existing_booking:
         updated_fields = False
         updated_name = data.get('name')
+
         if existing_booking.name != updated_name:
             existing_booking.name = updated_name
             updated_fields = True
@@ -118,24 +120,23 @@ def school_booking_list_create(request):
             serializer = SchoolBookingSerializer(existing_booking)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    booking, created = SchoolBooking.objects.get_or_create(
-        name=data['name'],
-        age=data['age'],
-        mobile=data['mobile'],
-        pickup_location=data['pickup_location'],
-        drop_location=data['drop_location'],
-        defaults={
-            'gender': data['gender'],
-            'pickup_time': data.get('pickup_time'),
-            'return_time': data.get('return_time'),
-            'date': data['date']
-        }
-    )
-
-    if created:
-        serializer = SchoolBookingSerializer(booking)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
-        return Response({'message': 'Booking already exists'}, status=status.HTTP_409_CONFLICT)
+        booking, created = SchoolBooking.objects.get_or_create(
+            name=data['name'],
+            age=data['age'],
+            mobile=data['mobile'],
+            pickup_location=data['pickup_location'],
+            drop_location=data['drop_location'],
+            gender=data['gender'],
+            pickup_time=data.get('pickup_time'),
+            return_time=data.get('return_time'),
+            date=data['date']
+        )
+
+        if created:
+            serializer = SchoolBookingSerializer(booking)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'message': 'Booking already exists'}, status=status.HTTP_409_CONFLICT)
 
     return Response({'message': 'Method Not Allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
