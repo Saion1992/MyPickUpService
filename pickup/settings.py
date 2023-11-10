@@ -79,16 +79,18 @@ WSGI_APPLICATION = 'pickup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pickup',  # Your database name
-        'USER': 'chityanjs',  # Your username
-        'PASSWORD': 'Nfqyolj4Swz1',  # Your password
-        'HOST': 'ep-plain-wildflower-79539467.ap-southeast-1.aws.neon.tech',  # Your host
+        'NAME': 'SlotBookingDatabase',  # Your database name
+        'USER': 'cyan241992',  # Your username
+        'PASSWORD': 't1OyZJ7AlUCc',  # Your password
+        'HOST': 'ep-odd-sun-22519589.us-east-2.aws.neon.tech',  # Your host
         'PORT': '5432',  # Your port (if not default)
         'OPTIONS': {
             'sslmode': 'require',  # To enable SSL
         },
     }
 }
+
+//psql 'postgresql://cyan241992:t1OyZJ7AlUCc@ep-odd-sun-22519589.us-east-2.aws.neon.tech/SlotBookingDatabase?sslmode=require'
 
 
 # Password validation
