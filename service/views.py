@@ -6,12 +6,14 @@ from .models import OfficeBooking, SelectedDay, SchoolBooking
 from .serializers import OfficeBookingSerializer, SchoolBookingSerializer
 
 
+@api_view(['POST'])
 def office_booking_list_create(request):
     data = request.data
     mobile = data.get('mobile')
     existing_booking = OfficeBooking.objects.filter(mobile=mobile).first()
 
     if existing_booking:
+        # Phone number matches, update existing entry
         updated_fields = False
         updated_name = data.get('name')
         new_selected_days = data.get('selected_days', [])
@@ -40,7 +42,7 @@ def office_booking_list_create(request):
             existing_booking.want_return = data.get('want_return')
             updated_fields = True
 
-        existing_selected_days = list(existing_booking.selected_days.values_list('day', flat=True))
+        existing_selected_days = set(existing_booking.selected_days.values_list('day', flat=True))
         if set(existing_selected_days) != set(new_selected_days):
             existing_booking.selected_days.clear()
             for selected_day in new_selected_days:
@@ -52,33 +54,28 @@ def office_booking_list_create(request):
             existing_booking.save()
             serializer = OfficeBookingSerializer(existing_booking)
             return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        # Phone number doesn't match, create a new entry
+        selected_days_data = data.get('selected_days', [])
+        booking = OfficeBooking.objects.create(
+            name=data['name'],
+            mobile=data['mobile'],
+            pickup_location=data['pickup_location'],
+            drop_location=data['drop_location'],
+            gender=data['gender'],
+            pickup_time=data['pickup_time'],
+            return_time=data['return_time'],
+            want_return=data['want_return']
+        )
 
-    selected_days_data = data.get('selected_days', [])
-    booking, created = OfficeBooking.objects.get_or_create(
-        name=data['name'],
-        mobile=data['mobile'],
-        pickup_location=data['pickup_location'],
-        drop_location=data['drop_location'],
-        defaults={
-            'gender': data['gender'],
-            'pickup_time': data['pickup_time'],
-            'return_time': data['return_time'],
-            'want_return': data['want_return'],
-        }
-    )
-
-    if created:
         for selected_day in selected_days_data:
             day, created = SelectedDay.objects.get_or_create(day=selected_day)
             booking.selected_days.add(day)
 
         serializer = OfficeBookingSerializer(booking)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        return Response({'message': 'Booking already exists'}, status=status.HTTP_409_CONFLICT)
 
     return Response({'message': 'Method Not Allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 
 def school_booking_list_create(request):
     data = request.data
