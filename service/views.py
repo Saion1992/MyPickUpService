@@ -59,8 +59,8 @@ def office_booking_list_create(request):
         # Phone number doesn't match, create a new entry
         selected_days_data = data.get('selected_days', [])
         booking = OfficeBooking.objects.create(
-            name=data['name'],
-            mobile=data['mobile'],
+            name=data.get('name'),
+            mobile=data.get('mobile'),
             pickup_location=data.get('pickup_location'),
             drop_location=data.get('drop_location'),
             gender=data.get('gender'),
@@ -105,8 +105,8 @@ def school_booking_list_create(request):
             existing_booking.pickup_time = data.get('pickup_time')
             updated_fields = True
 
-        if existing_booking.return_time != data.get('return_time'):
-            existing_booking.return_time = data.get('return_time')
+        if existing_booking.return_time != data.get('return_time', None):
+            existing_booking.return_time = data.get('return_time', None)
             updated_fields = True
 
         if existing_booking.age != data.get('age'):
