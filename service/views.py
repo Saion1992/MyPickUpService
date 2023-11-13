@@ -35,8 +35,8 @@ def office_booking_list_create(request):
             existing_booking.pickup_time = data.get('pickup_time')
             updated_fields = True
 
-        if existing_booking.return_time != data.get('return_time'):
-            existing_booking.return_time = data.get('return_time')
+        if existing_booking.return_time != data.get('return_time', None):
+            existing_booking.return_time = data.get('return_time', None)
             updated_fields = True
 
         if existing_booking.want_return != data.get('want_return'):
@@ -61,12 +61,12 @@ def office_booking_list_create(request):
         booking = OfficeBooking.objects.create(
             name=data['name'],
             mobile=data['mobile'],
-            pickup_location=data['pickup_location'],
-            drop_location=data['drop_location'],
-            gender=data['gender'],
-            pickup_time=data['pickup_time'],
-            return_time=data['return_time'],
-            want_return=data['want_return']
+            pickup_location=data.get('pickup_location'),
+            drop_location=data.get('drop_location'),
+            gender=data.get('gender'),
+            pickup_time=data.get('pickup_time'),
+            return_time=data.get('return_time', None),
+            want_return=data.get('want_return')
         )
 
         for selected_day in selected_days_data:
